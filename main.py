@@ -14,6 +14,13 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
 
+    # create updatable and drawable groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    
+    # set both groups as containers for the Player
+    Player.containers = (updatable, drawable)
+
     # instantiate (create instance of a class) a player object and spawn it in the middle of the screen
     player = Player((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))
 
@@ -34,10 +41,11 @@ def main():
         screen.fill("black")
         
         # update player movement before each frame
-        player.update(dt)
+        updatable.update(dt)
 
         # re-render the player on the screen each frame
-        player.draw(screen)
+        for entity in drawable:
+            entity.draw(screen)
 
         #use display.flip() to refresh
         pygame.display.flip()
