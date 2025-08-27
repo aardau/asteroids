@@ -1,7 +1,9 @@
-# import
+import sys
 import pygame
 from constants import *
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     # initialize all imported pygame modules
@@ -14,12 +16,16 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
 
-    # create updatable and drawable groups
+    # create object groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
-    
-    # set both groups as containers for the Player
+    asteroids = pygame.sprite.Group()
+
+    # set containers for the Player, Asteroid, and AsteroidField
     Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable)
+    asteroid_field = AsteroidField()
 
     # instantiate (create instance of a class) a player object and spawn it in the middle of the screen
     player = Player((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))
@@ -42,6 +48,12 @@ def main():
         
         # update player movement before each frame
         updatable.update(dt)
+
+        # check for asteroid collisions
+        for asteroid_entity in asteroids:
+            if asteroid_entity.collision(player):
+                print("Game over!")
+                sys.exit()
 
         # re-render the player on the screen each frame
         for entity in drawable:
