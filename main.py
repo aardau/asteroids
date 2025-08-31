@@ -58,6 +58,14 @@ def main():
                 print("Game over!")
                 sys.exit()
 
+        # check for shot collisions with asteroids
+        for asteroid_entity in asteroids:
+            for shot_entity in shots:
+                if shot_entity.collision(asteroid_entity):
+                    shot_entity.kill()
+                    asteroid_entity.split()
+            
+
         # re-render the player on the screen each frame
         for entity in drawable:
             entity.draw(screen)
